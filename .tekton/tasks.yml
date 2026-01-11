@@ -1,6 +1,24 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
+  name: cleanup
+spec:
+  description: This task cleans up the workspace after pipeline execution.
+  workspaces:
+    - name: source
+  steps:
+    - name: cleanup-workspace
+      image: alpine
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/bin/sh
+        echo "Cleaning up workspace..."
+        rm -rf *
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
   name: nose
 spec:
   description: This task will run Python tests using nose.
